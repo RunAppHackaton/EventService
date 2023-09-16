@@ -7,8 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ParticipationInEventsRequestDto {
-    @NotNull
+    @NotNull(message = "can't be empty")
     private Long eventId;
-    @NotNull
+    @NotNull(message = "can't be empty")
     private Long userId;
 }

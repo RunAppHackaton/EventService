@@ -1,13 +1,12 @@
 package hakaton.eventservice.service.impl;
 
-import hakaton.eventservice.exception.NoEntityException;
+import java.util.List;
+import hakaton.eventservice.exception.NoEntityFoundException;
 import hakaton.eventservice.model.Prize;
 import hakaton.eventservice.repository.PrizeRepository;
 import hakaton.eventservice.service.PrizeService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -23,7 +22,7 @@ public class PrizeServiceImpl implements PrizeService {
     @Override
     public Prize getById(Long id) {
         return prizeRepository.findById(id).orElseThrow(() -> {
-            throw new NoEntityException("Prize with id: " + id + " doesn't exist");
+            throw new NoEntityFoundException("Prize with id: " + id + " doesn't exist");
         });
     }
 
@@ -34,13 +33,16 @@ public class PrizeServiceImpl implements PrizeService {
 
     @Override
     public void deleteById(Long id) {
+        if (!prizeRepository.existsById(id)) {
+            throw new NoEntityFoundException("Prize with id: " + id + " doesn't exist");
+        }
         prizeRepository.deleteById(id);
     }
 
     @Override
     public Prize update(Prize prize) {
         if (!prizeRepository.existsById(prize.getId())) {
-            throw new NoEntityException("Prize " + prize + " doesn't exist");
+            throw new NoEntityFoundException("Prize " + prize + " doesn't exist");
         }
         return prizeRepository.save(prize);
     }

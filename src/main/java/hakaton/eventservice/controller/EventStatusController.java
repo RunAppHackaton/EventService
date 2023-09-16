@@ -8,6 +8,8 @@ import hakaton.eventservice.service.EventStatusService;
 import hakaton.eventservice.service.dto.mapper.DtoMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
@@ -20,37 +22,48 @@ public class EventStatusController {
 
     @Operation(summary = "add event status")
     @PostMapping
-    public EventStatusResponseDto add(@RequestBody EventStatusRequestDto statusRequestDto) {
-        return eventStatusDtoMapper.toDto(eventStatusService
-                .add(eventStatusDtoMapper.toModel(statusRequestDto)));
+    public ResponseEntity<EventStatusResponseDto> add(
+            @RequestBody EventStatusRequestDto statusRequestDto
+    ) {
+        EventStatusResponseDto responseDto = eventStatusDtoMapper
+                .toDto(eventStatusService.add(eventStatusDtoMapper.toModel(statusRequestDto)));
+        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
     @Operation(summary = "get event status by id", description = "event status must exist in db")
     @GetMapping("/{id}")
-    public EventStatusResponseDto get(@PathVariable("id") Long id) {
-        return eventStatusDtoMapper.toDto(eventStatusService.getById(id));
+    public ResponseEntity<EventStatusResponseDto> get(@PathVariable("id") Long id) {
+        EventStatusResponseDto ResponseDto =
+                eventStatusDtoMapper.toDto(eventStatusService.getById(id));
+        return new ResponseEntity<>(ResponseDto, HttpStatus.OK);
     }
 
     @Operation(summary = "get all event statuses")
     @GetMapping("/all")
-    public List<EventStatusResponseDto> getAll() {
-        return eventStatusService.getAll().stream()
+    public ResponseEntity<List<EventStatusResponseDto>> getAll() {
+        List<EventStatusResponseDto> responseDtos = eventStatusService.getAll()
+                .stream()
                 .map(eventStatusDtoMapper::toDto)
                 .toList();
+        return new ResponseEntity<>(responseDtos, HttpStatus.OK);
     }
 
     @Operation(summary = "update event status", description = "pass id of existing event and event status object(with changed fields")
     @PutMapping("/{id}")
-    public EventStatusResponseDto get(@PathVariable("id") Long id,
-                                      @RequestBody EventStatusRequestDto eventStatusRequestDto) {
+    public ResponseEntity<EventStatusResponseDto> get(@PathVariable("id") Long id,
+                                      @RequestBody EventStatusRequestDto eventStatusRequestDto
+    ) {
         EventStatus eventStatus = eventStatusDtoMapper.toModel(eventStatusRequestDto);
         eventStatus.setId(id);
-        return eventStatusDtoMapper.toDto(eventStatusService.update(eventStatus));
+        EventStatusResponseDto responseDto =
+                eventStatusDtoMapper.toDto(eventStatusService.update(eventStatus));
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     @Operation(summary = "delete event status by id")
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         eventStatusService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

@@ -9,6 +9,8 @@ import hakaton.eventservice.service.dto.mapper.DtoMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
@@ -22,42 +24,49 @@ public class ParticipationInEventsController {
 
     @Operation(summary = "get participation in events by id", description = "must exist in db")
     @GetMapping("/{id}")
-    public ParticipationInEventsResponseDto get(@PathVariable("id") Long id) {
-        return participationInEventsDtoMapper
-                    .toDto(participationInEventsService.getById(id));
+    public ResponseEntity<ParticipationInEventsResponseDto> get(@PathVariable("id") Long id) {
+        ParticipationInEventsResponseDto responseDto =
+                participationInEventsDtoMapper.toDto(participationInEventsService.getById(id));
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     @Operation(summary = "get all participation in events")
     @GetMapping("/all")
-    public List<ParticipationInEventsResponseDto> getAll() {
-        return participationInEventsService.getAll().stream()
+    public ResponseEntity<List<ParticipationInEventsResponseDto>> getAll() {
+        List<ParticipationInEventsResponseDto> responseDtos = participationInEventsService.getAll()
+                .stream()
                 .map(participationInEventsDtoMapper::toDto)
                 .toList();
+        return new ResponseEntity<>(responseDtos, HttpStatus.OK);
     }
 
     @Operation(summary = "add participation in events")
     @PostMapping
-    public ParticipationInEventsResponseDto add(
-            @Valid @RequestBody ParticipationInEventsRequestDto requestDto) {
-        return participationInEventsDtoMapper.toDto(participationInEventsService
-                .add(participationInEventsDtoMapper.toModel(requestDto)));
+    public ResponseEntity<ParticipationInEventsResponseDto> add(
+            @Valid @RequestBody ParticipationInEventsRequestDto requestDto
+    ) {
+        ParticipationInEventsResponseDto responseDto = participationInEventsDtoMapper
+                .toDto(participationInEventsService.add(participationInEventsDtoMapper.toModel(requestDto)));
+        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
     @Operation(summary = "update participation in events",
             description = "pass id of existing object,"
                     + " and object of type participation in events (with changed fields)")
     @PutMapping("/{id}")
-    public ParticipationInEventsResponseDto update(
+    public ResponseEntity<ParticipationInEventsResponseDto> update(
             @PathVariable Long id, @Valid @RequestBody ParticipationInEventsRequestDto requestDto) {
         ParticipationInEvents participation = participationInEventsDtoMapper.toModel(requestDto);
         participation.setId(id);
-        return participationInEventsDtoMapper
-                        .toDto(participationInEventsService.update(participation));
+        ParticipationInEventsResponseDto responseDto = participationInEventsDtoMapper
+                .toDto(participationInEventsService.update(participation));
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     @Operation(summary = "delete participation in events by id")
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         participationInEventsService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

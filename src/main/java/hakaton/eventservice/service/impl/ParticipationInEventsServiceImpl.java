@@ -1,13 +1,12 @@
 package hakaton.eventservice.service.impl;
 
-import hakaton.eventservice.exception.NoEntityException;
+import java.util.List;
+import hakaton.eventservice.exception.NoEntityFoundException;
 import hakaton.eventservice.model.ParticipationInEvents;
 import hakaton.eventservice.repository.ParticipationInEventsRepository;
 import hakaton.eventservice.service.ParticipationInEventsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -22,7 +21,7 @@ public class ParticipationInEventsServiceImpl implements ParticipationInEventsSe
     @Override
     public ParticipationInEvents getById(Long id) {
         return participationInEventsRepository.findById(id).orElseThrow(() -> {
-            throw new NoEntityException("ParticipationInEvents with id: " + id + " doesn't exist");
+            throw new NoEntityFoundException("ParticipationInEvents with id: " + id + " doesn't exist");
         });
     }
 
@@ -33,13 +32,16 @@ public class ParticipationInEventsServiceImpl implements ParticipationInEventsSe
 
     @Override
     public void deleteById(Long id) {
-        participationInEventsRepository.deleteById(id);
+        if (!participationInEventsRepository.existsById(id)){
+            participationInEventsRepository.deleteById(id);
+        }
+        throw new NoEntityFoundException("ParticipationInEvents with id: " + id + " doesn't exist");
     }
 
     @Override
     public ParticipationInEvents update(ParticipationInEvents participationInEvents) {
         if (!participationInEventsRepository.existsById(participationInEvents.getId())) {
-            throw new NoEntityException("ParticipationInEvents " + participationInEvents + " doesn't exist");
+            throw new NoEntityFoundException("ParticipationInEvents " + participationInEvents + " doesn't exist");
         }
         return participationInEventsRepository.save(participationInEvents);
     }

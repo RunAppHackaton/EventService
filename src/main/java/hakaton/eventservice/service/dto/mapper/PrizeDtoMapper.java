@@ -20,9 +20,9 @@ public class PrizeDtoMapper implements DtoMapper<Prize, PrizeRequestDto, PrizeRe
     @Override
     public PrizeResponseDto toDto(Prize model) {
         PrizeResponseDto dto = new PrizeResponseDto();
-        dto.setId(dto.getId());
-        dto.setName(dto.getName());
-        dto.setCount(dto.getCount());
+        dto.setId(model.getId());
+        dto.setName(model.getName());
+        dto.setCount(model.getCount());
         dto.setEventId(model.getEvent().getId());
         return dto;
     }

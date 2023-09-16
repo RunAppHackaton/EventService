@@ -9,6 +9,8 @@ import hakaton.eventservice.service.dto.mapper.DtoMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
@@ -20,37 +22,44 @@ public class PrizeController {
 
     @Operation(summary = "get prize by id", description = "prize must exist in db")
     @GetMapping("/{id}")
-    public PrizeResponseDto get(@PathVariable("id") Long id) {
-        return prizeDtoMapper.toDto(prizeService.getById(id));
+    public ResponseEntity<PrizeResponseDto> get(@PathVariable("id") Long id) {
+        PrizeResponseDto responseDto = prizeDtoMapper.toDto(prizeService.getById(id));
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     @Operation(summary = "get all prizes")
     @GetMapping("/all")
-    public List<PrizeResponseDto> getAll() {
-        return prizeService.getAll().stream()
+    public ResponseEntity<List<PrizeResponseDto>> getAll() {
+        List<PrizeResponseDto> responseDtos = prizeService.getAll()
+                .stream()
                 .map(prizeDtoMapper::toDto)
                 .toList();
+        return new ResponseEntity<>(responseDtos, HttpStatus.OK);
     }
 
     @Operation(summary = "add prize to db")
     @PostMapping
-    public PrizeResponseDto add(@Valid @RequestBody PrizeRequestDto requestDto) {
-        return prizeDtoMapper.toDto(prizeService
-                .add(prizeDtoMapper.toModel(requestDto)));
+    public ResponseEntity<PrizeResponseDto> add(@Valid @RequestBody PrizeRequestDto requestDto) {
+        PrizeResponseDto responseDto = prizeDtoMapper
+                .toDto(prizeService.add(prizeDtoMapper.toModel(requestDto)));
+        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
     @Operation(summary = "update prize", description = "pass id of existing prize, and prize object (with changed fields)")
     @PutMapping("/{id}")
-    public PrizeResponseDto update(@PathVariable("id") Long id,
-                                       @Valid @RequestBody PrizeRequestDto requestDto) {
+    public ResponseEntity<PrizeResponseDto> update(@PathVariable("id") Long id,
+                                       @Valid @RequestBody PrizeRequestDto requestDto
+    ) {
         Prize prize = prizeDtoMapper.toModel(requestDto);
         prize.setId(id);
-        return prizeDtoMapper.toDto(prizeService.update(prize));
+        PrizeResponseDto responseDto = prizeDtoMapper.toDto(prizeService.update(prize));
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     @Operation(summary = "delete prize by id")
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         prizeService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
