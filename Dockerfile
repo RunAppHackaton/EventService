@@ -1,4 +1,6 @@
-FROM openjdk:17.0.2-oracle
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+FROM amazoncorretto:17-alpine-jdk
+VOLUME /tmp
+ARG JAR_FILE
+COPY /target/*.jar app.jar
+EXPOSE 9000
+ENTRYPOINT exec java $JAVA_OPTS -jar /app.jar $ARGS

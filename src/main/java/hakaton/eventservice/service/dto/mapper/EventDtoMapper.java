@@ -16,7 +16,7 @@ public class EventDtoMapper implements
         event.setName(dto.getName());
         event.setDate(dto.getDate());
         event.setAdminPermission(dto.isAdminPermission());
-        event.setEventImageUrl(dto.getEventImageUrl());
+        event.setEventImageUrl("DEFAULT");
         event.setEventWebsite(dto.getEventWebsite());
         event.setEventOrganizer(dto.getEventOrganizer());
         event.setLocation(dto.getLocation());

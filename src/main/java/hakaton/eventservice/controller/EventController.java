@@ -1,8 +1,11 @@
 package hakaton.eventservice.controller;
 
 import java.util.List;
+import java.util.Optional;
+
 import hakaton.eventservice.dto.request.EventRequestDto;
 import hakaton.eventservice.dto.response.EventResponseDto;
+import hakaton.eventservice.feignClient.StorageServiceClient;
 import hakaton.eventservice.model.Event;
 import hakaton.eventservice.service.EventService;
 import hakaton.eventservice.service.dto.mapper.DtoMapper;
@@ -19,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 public class EventController {
     private final EventService eventService;
     private final DtoMapper<Event, EventRequestDto, EventResponseDto> eventDtoMapper;
+    private final StorageServiceClient storageServiceClient;
+    private final String storageDirectory = "EventService/";
 
     @Operation(summary = "get event by id", description = "customer must exist")
     @GetMapping("/{id}")
@@ -60,4 +65,11 @@ public class EventController {
         eventService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+//    @Operation(summary = "upload event image" , description = "")
+//    @PostMapping("/upload-image")
+//    public EventResponseDto uploadImage(@RequestParam("file") MultipartFile file, @RequestParam("story_id") Long storyId) {
+//        eventService.getById(storyId);
+//        return null;
+//    }
 }
