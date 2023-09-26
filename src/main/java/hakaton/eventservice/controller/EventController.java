@@ -3,26 +3,28 @@ package hakaton.eventservice.controller;
 import java.util.List;
 import java.util.Optional;
 
+import hakaton.eventservice.dto.request.EventImageDeleteRequest;
 import hakaton.eventservice.dto.request.EventRequestDto;
 import hakaton.eventservice.dto.response.EventResponseDto;
 import hakaton.eventservice.feignClient.StorageServiceClient;
 import hakaton.eventservice.model.Event;
 import hakaton.eventservice.service.EventService;
 import hakaton.eventservice.service.dto.mapper.DtoMapper;
+import hakaton.eventservice.service.impl.EventServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @AllArgsConstructor
 @RestController
 @RequestMapping("/events")
 public class EventController {
-    private final EventService eventService;
+    private final EventServiceImpl eventService;
     private final DtoMapper<Event, EventRequestDto, EventResponseDto> eventDtoMapper;
-    private final StorageServiceClient storageServiceClient;
     private final String storageDirectory = "EventService/";
 
     @Operation(summary = "get event by id", description = "customer must exist")
@@ -45,14 +47,14 @@ public class EventController {
     @PostMapping
     public ResponseEntity<EventResponseDto> add(@Valid @RequestBody EventRequestDto requestDto) {
         EventResponseDto responseDto = eventDtoMapper.toDto(eventService
-                                            .add(eventDtoMapper.toModel(requestDto)));
+                .add(eventDtoMapper.toModel(requestDto)));
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
     @Operation(summary = "update event", description = "pass id of existing event, and object of type event (with changed fields)")
     @PutMapping("/{id}")
     public ResponseEntity<EventResponseDto> update(@PathVariable Long id,
-                                   @Valid @RequestBody EventRequestDto requestDto) {
+                                                   @Valid @RequestBody EventRequestDto requestDto) {
         Event event = eventDtoMapper.toModel(requestDto);
         event.setId(id);
         EventResponseDto responseDto = eventDtoMapper.toDto(eventService.update(event));
@@ -66,10 +68,15 @@ public class EventController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-//    @Operation(summary = "upload event image" , description = "")
-//    @PostMapping("/upload-image")
-//    public EventResponseDto uploadImage(@RequestParam("file") MultipartFile file, @RequestParam("story_id") Long storyId) {
-//        eventService.getById(storyId);
-//        return null;
-//    }
+    @Operation(summary = "upload event image", description = "save image event and upload image to storage")
+    @PostMapping("/upload-image")
+    public EventResponseDto uploadEventImage(@RequestParam("file") MultipartFile file, @RequestParam("event_id") Long eventId) {
+        return eventDtoMapper.toDto(eventService.uploadEventImage(eventId, file, storageDirectory));
+    }
+
+    @Operation(summary = "upload event image", description = "delete image event and delete image from storage")
+    @DeleteMapping
+    public ResponseEntity<Object> deleteEventImage(@RequestBody EventImageDeleteRequest request) {
+        return eventService.deleteEventImage(request, storageDirectory);
+    }
 }

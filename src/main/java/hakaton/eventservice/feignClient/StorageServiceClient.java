@@ -20,5 +20,5 @@ public interface StorageServiceClient {
                                       @Parameter(description = "directory", required = true) @RequestPart("directory") String directory);
 
     @DeleteMapping(value = "/storage/delete")
-    public ResponseEntity<Object> deleteFile(@RequestBody DeleteStorageRequest deleteStorageRequest);
+    ResponseEntity<Object> deleteFile(@RequestBody DeleteStorageRequest deleteStorageRequest);
 }
