@@ -16,7 +16,7 @@ management:
     health:
       show-details: always
 springdoc:
-  packagesToScan: com.runapp.eventservice.EventServiceApplication
+  packagesToScan: com.runapp.eventservice
 
 eureka:
   client:
