@@ -51,7 +51,7 @@ public class EventStatusController {
 
     @Operation(summary = "update event status", description = "pass id of existing event and event status object(with changed fields")
     @PutMapping("/{id}")
-    public ResponseEntity<EventStatusResponseDto> get(@PathVariable("id") Long id,
+    public ResponseEntity<EventStatusResponseDto> put(@PathVariable("id") Long id,
                                       @RequestBody EventStatusRequestDto eventStatusRequestDto
     ) {
         EventStatus eventStatus = eventStatusDtoMapper.toModel(eventStatusRequestDto);

@@ -50,7 +50,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public void deleteById(Long id) {
         LOGGER.info("Event delete by id: {}", id);
-        if (eventRepository.existsById(id)) {
+        if (!eventRepository.existsById(id)) {
             throw new NoEntityFoundException("Event with id: " + id + " doesn't exist");
         }
         eventRepository.deleteById(id);
