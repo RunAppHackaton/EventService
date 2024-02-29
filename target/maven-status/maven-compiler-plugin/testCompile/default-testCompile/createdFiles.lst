@@ -1,1 +1,11 @@
 com\runapp\eventservice\controller\EventControllerTest.class
+com\runapp\eventservice\controller\EventStatusControllerTest.class
+com\runapp\eventservice\service\EventStatusServiceTest.class
+com\runapp\eventservice\staticObject\StaticParticipationInEvents.class
+com\runapp\eventservice\service\EventTypeServiceTest.class
+com\runapp\eventservice\service\EventServiceTest.class
+com\runapp\eventservice\controller\EventTypeControllerTest.class
+com\runapp\eventservice\service\ParticipationInEventsServiceTest.class
+com\runapp\eventservice\service\PrizeServiceTest.class
+com\runapp\eventservice\controller\PrizeControllerTest.class
+com\runapp\eventservice\controller\ParticipationInEventsControllerTest.class

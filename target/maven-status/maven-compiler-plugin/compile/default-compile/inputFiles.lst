@@ -2,6 +2,7 @@ D:\My Directory\Projects\JavaProjects\Practices\EventService\src\main\java\com\r
 D:\My Directory\Projects\JavaProjects\Practices\EventService\src\main\java\com\runapp\eventservice\dto\request\EventImageDeleteRequest.java
 D:\My Directory\Projects\JavaProjects\Practices\EventService\src\main\java\com\runapp\eventservice\dto\request\EventRequestDto.java
 D:\My Directory\Projects\JavaProjects\Practices\EventService\src\main\java\com\runapp\eventservice\exception\GlobalExceptionHandler.java
+D:\My Directory\Projects\JavaProjects\Practices\EventService\src\main\java\com\runapp\eventservice\config\RedisConfig.java
 D:\My Directory\Projects\JavaProjects\Practices\EventService\src\main\java\com\runapp\eventservice\service\dto\mapper\EventDtoMapper.java
 D:\My Directory\Projects\JavaProjects\Practices\EventService\src\main\java\com\runapp\eventservice\dto\request\PrizeRequestDto.java
 D:\My Directory\Projects\JavaProjects\Practices\EventService\src\main\java\com\runapp\eventservice\service\impl\EventStatusServiceImpl.java

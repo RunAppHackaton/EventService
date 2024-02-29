@@ -32,6 +32,7 @@ com\runapp\eventservice\model\ParticipationInEvents.class
 com\runapp\eventservice\controller\EventController.class
 com\runapp\eventservice\dto\request\EventImageDeleteRequest.class
 com\runapp\eventservice\dto\response\EventStatusResponseDto.class
+com\runapp\eventservice\config\RedisConfig.class
 com\runapp\eventservice\exception\NoEntityFoundException.class
 com\runapp\eventservice\repository\EventRepository.class
 com\runapp\eventservice\service\dto\mapper\DtoMapper.class

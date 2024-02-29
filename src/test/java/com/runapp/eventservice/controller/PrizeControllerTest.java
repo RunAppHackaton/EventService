@@ -1,24 +1,36 @@
 package com.runapp.eventservice.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.runapp.eventservice.dto.request.PrizeRequestDto;
 import com.runapp.eventservice.dto.response.PrizeResponseDto;
+import com.runapp.eventservice.exception.GlobalExceptionHandler;
 import com.runapp.eventservice.model.Prize;
 import com.runapp.eventservice.service.PrizeService;
 import com.runapp.eventservice.service.dto.mapper.DtoMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MockMvcBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 @ExtendWith(MockitoExtension.class)
 class PrizeControllerTest {
 
@@ -30,6 +42,17 @@ class PrizeControllerTest {
 
     @InjectMocks
     private PrizeController prizeController;
+
+    private ObjectMapper objectMapper;
+
+    private MockMvc mockMvc;
+
+    @BeforeEach
+    public void setup(){
+        objectMapper = new ObjectMapper();
+        mockMvc = MockMvcBuilders.standaloneSetup(prizeController)
+                .setControllerAdvice(GlobalExceptionHandler.class).build();
+    }
 
     @Test
     void testGetPrizeById() throws Exception {
@@ -72,6 +95,19 @@ class PrizeControllerTest {
         verify(prizeService, times(1)).add(any());
         verify(prizeDtoMapper, times(1)).toModel(requestDto);
         verify(prizeDtoMapper, times(1)).toDto(any());
+    }
+
+    @Test
+    public void testAdd_PrizeAlreadyExists() throws Exception {
+        // Mock PrizeRequestDto
+        PrizeRequestDto requestDto = new PrizeRequestDto();
+        // Set fields of requestDto as needed
+
+        // Perform POST request
+        mockMvc.perform(post("/prizes")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestDto)))
+                .andExpect(status().isBadRequest()); // Expecting 400 Bad Request
     }
 
     @Test
