@@ -1,5 +1,6 @@
 package com.runapp.eventservice.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,7 +12,7 @@ import lombok.*;
 @ToString
 @Entity
 @Table(name = "event")
-public class Event {
+public class Event implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

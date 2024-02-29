@@ -3,6 +3,8 @@ package com.runapp.eventservice.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -10,7 +12,7 @@ import lombok.*;
 @ToString
 @Entity
 @Table(name = "event_status")
-public class EventStatus {
+public class EventStatus implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

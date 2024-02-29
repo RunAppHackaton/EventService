@@ -15,6 +15,10 @@ import com.runapp.eventservice.service.EventService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -28,12 +32,15 @@ public class EventServiceImpl implements EventService {
     private static final Logger LOGGER = LoggerFactory.getLogger(EventServiceImpl.class);
 
     @Override
+    @Caching(put = {@CachePut(value = "events", key = "#event.id")},
+            evict = {@CacheEvict(value = "events", allEntries = true)})
     public Event add(Event event) {
         LOGGER.info("Event add: event");
         return eventRepository.save(event);
     }
 
     @Override
+    @Cacheable(value = "events", key = "#id")
     public Event getById(Long id) {
         LOGGER.info("Event get by id: {}", id);
         return eventRepository.findById(id).orElseThrow(() -> {
@@ -42,12 +49,14 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Cacheable("events")
     public List<Event> getAll() {
         LOGGER.info("Event get all");
         return eventRepository.findAll();
     }
 
     @Override
+    @CacheEvict(value = "events", key = "#id")
     public void deleteById(Long id) {
         LOGGER.info("Event delete by id: {}", id);
         if (!eventRepository.existsById(id)) {
@@ -57,6 +66,8 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Caching(put = {@CachePut(value = "events", key = "#event.id")},
+            evict = {@CacheEvict(value = "events", allEntries = true)})
     public Event update(Event event) {
         LOGGER.info("Event update: {}", event);
         if (!eventRepository.existsById(event.getId())) {
@@ -65,6 +76,8 @@ public class EventServiceImpl implements EventService {
         return eventRepository.save(event);
     }
 
+    @Caching(put = {@CachePut(value = "events", key = "#eventId")},
+            evict = {@CacheEvict(value = "events", allEntries = true)})
     public Event uploadEventImage(Long eventId, MultipartFile file, String storageDirectory) {
         LOGGER.info("Event upload image: eventId={}, storageDirectory={}", eventId, storageDirectory);
         StorageServiceResponse storageServiceResponse = storageServiceClient.uploadFile(file, storageDirectory);
@@ -75,6 +88,10 @@ public class EventServiceImpl implements EventService {
         return event;
     }
 
+
+    @Caching(put = {@CachePut(value = "events", key = "#event.id")},
+            evict = {@CacheEvict(value = "events", allEntries = true),
+                    @CacheEvict(value = "events", key = "#eventImageDeleteRequest.event_id")})
     public ResponseEntity<Object> deleteEventImage(EventImageDeleteRequest eventImageDeleteRequest, String storageDirectory) {
         LOGGER.info("Event delete image: eventImageDeleteRequest={}, storageDirectory={}", eventImageDeleteRequest, storageDirectory);
         Event event = eventRepository.findById(eventImageDeleteRequest.getEvent_id()).orElseThrow(

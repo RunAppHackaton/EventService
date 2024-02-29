@@ -60,5 +60,9 @@ spring:
         config:
           storage-service:
             url: ${STORAGE_SERVICE_URL}
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
 
 storage-directory: EventService/

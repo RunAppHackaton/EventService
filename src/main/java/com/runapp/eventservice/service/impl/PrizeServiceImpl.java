@@ -9,6 +9,10 @@ import com.runapp.eventservice.service.PrizeService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,12 +22,15 @@ public class PrizeServiceImpl implements PrizeService {
     private static final Logger LOGGER = LoggerFactory.getLogger(PrizeServiceImpl.class);
 
     @Override
+    @Caching(put = {@CachePut(value = "prizes", key = "#prize.id")},
+            evict = {@CacheEvict(value = "prizes", allEntries = true)})
     public Prize add(Prize prize) {
         LOGGER.info("Prize add: {}", prize);
         return prizeRepository.save(prize);
     }
 
     @Override
+    @Cacheable(value = "prizes", key = "#id")
     public Prize getById(Long id) {
         LOGGER.info("Prize get by id: {}", id);
         return prizeRepository.findById(id).orElseThrow(() -> {
@@ -32,12 +39,14 @@ public class PrizeServiceImpl implements PrizeService {
     }
 
     @Override
+    @Cacheable("prizes")
     public List<Prize> getAll() {
         LOGGER.info("Prize get all}");
         return prizeRepository.findAll();
     }
 
     @Override
+    @CacheEvict(value = "prizes", key = "#id")
     public void deleteById(Long id) {
         LOGGER.info("Prize delete by id: {}", id);
         if (!prizeRepository.existsById(id)) {
@@ -47,6 +56,8 @@ public class PrizeServiceImpl implements PrizeService {
     }
 
     @Override
+    @Caching(put = {@CachePut(value = "prizes", key = "#prize.id")},
+            evict = {@CacheEvict(value = "prizes", allEntries = true)})
     public Prize update(Prize prize) {
         LOGGER.info("Prize update: {}", prize);
         if (!prizeRepository.existsById(prize.getId())) {
