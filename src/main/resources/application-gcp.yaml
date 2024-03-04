@@ -11,7 +11,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: ${ENDPOINTS_INCLUDE:"*"}
+        include: ${ENDPOINTS_INCLUDE:*}
   endpoint:
     health:
       show-details: ${HEALTH_SHOW_DETAILS:always}
