@@ -44,7 +44,8 @@ public class ParticipationInEventsController {
     @Operation(summary = "add participation in events")
     @PostMapping
     public ResponseEntity<ParticipationInEventsResponseDto> add(
-            @Valid @RequestBody ParticipationInEventsRequestDto requestDto
+            @Valid @RequestBody ParticipationInEventsRequestDto requestDto,
+            @RequestHeader("X-UserId") String userId
     ) {
         ParticipationInEventsResponseDto responseDto = participationInEventsDtoMapper
                 .toDto(participationInEventsService.add(participationInEventsDtoMapper.toModel(requestDto)));
@@ -56,7 +57,7 @@ public class ParticipationInEventsController {
                     + " and object of type participation in events (with changed fields)")
     @PutMapping("/{id}")
     public ResponseEntity<ParticipationInEventsResponseDto> update(
-            @PathVariable Long id, @Valid @RequestBody ParticipationInEventsRequestDto requestDto) {
+            @PathVariable Long id, @Valid @RequestBody ParticipationInEventsRequestDto requestDto, @RequestHeader("X-UserId") String userId) {
         ParticipationInEvents participation = participationInEventsDtoMapper.toModel(requestDto);
         participation.setId(id);
         ParticipationInEventsResponseDto responseDto = participationInEventsDtoMapper

@@ -8,5 +8,5 @@ import lombok.Setter;
 public class ParticipationInEventsResponseDto {
     private Long id;
     private Long eventId;
-    private Long userId;
+    private String userId;
 }

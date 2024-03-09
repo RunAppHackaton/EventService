@@ -15,7 +15,7 @@ public class StaticParticipationInEvents {
     public static ParticipationInEventsRequestDto participationInEventsRequestDto1(){
         ParticipationInEventsRequestDto requestDto = new ParticipationInEventsRequestDto();
         requestDto.setEventId(1L);
-        requestDto.setUserId(1L);
+        requestDto.setUserId("1");
 
         return requestDto;
     }
@@ -23,7 +23,7 @@ public class StaticParticipationInEvents {
     public static ParticipationInEventsResponseDto participationInEventsResponseDto1(){
         ParticipationInEventsResponseDto responseDto = new ParticipationInEventsResponseDto();
         responseDto.setEventId(1L);
-        responseDto.setUserId(1L);
+        responseDto.setUserId("1");
         responseDto.setId(1L);
 
         return responseDto;
@@ -34,7 +34,7 @@ public class StaticParticipationInEvents {
         event.setId(1L);
         event.setName("name");
         ParticipationInEvents participation = new ParticipationInEvents();
-        participation.setUserId(1L);
+        participation.setUserId("1");
         participation.setId(1L);
         participation.setEvent(event);
 

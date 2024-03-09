@@ -10,5 +10,5 @@ public class ParticipationInEventsRequestDto {
     @NotNull(message = "can't be empty")
     private Long eventId;
     @NotNull(message = "can't be empty")
-    private Long userId;
+    private String userId;
 }

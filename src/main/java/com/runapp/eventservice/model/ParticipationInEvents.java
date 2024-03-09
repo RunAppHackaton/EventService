@@ -20,5 +20,5 @@ public class ParticipationInEvents implements Serializable {
     @ManyToOne
     private Event event;
     @JoinColumn(name = "User_id")
-    private Long userId;
+    private String userId;
 }
