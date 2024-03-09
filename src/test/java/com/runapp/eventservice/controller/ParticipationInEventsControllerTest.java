@@ -92,7 +92,7 @@ class ParticipationInEventsControllerTest {
     void testAddParticipationInEvents() throws Exception {
         ParticipationInEventsRequestDto requestDto = StaticParticipationInEvents.participationInEventsRequestDto1();
 
-        mockMvc.perform(post("/participation-in-events")
+        mockMvc.perform(post("/participation-in-events").header("X-UserId", "1")
                         .contentType("application/json;charset=UTF-8")
                         .content(asJsonString(requestDto)))
                 .andExpect(status().isCreated());
@@ -109,7 +109,7 @@ class ParticipationInEventsControllerTest {
         when(participationInEventsService.update(participation)).thenReturn(participation);
         when(participationInEventsDtoMapper.toDto(participation)).thenReturn(responseDto);
 
-        mockMvc.perform(put("/participation-in-events/{id}", id)
+        mockMvc.perform(put("/participation-in-events/{id}", id).header("X-UserId", "1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(requestDto)))
                 .andExpect(status().isOk())
